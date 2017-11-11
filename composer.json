@@ -25,7 +25,7 @@
   },
   "autoload": {
     "psr-4": {
-      "Hoa\\Heap\\": "."
+      "Hoa\\Heap\\": "Source"
     }
   },
   "extra": {
