@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Hoa.
  *
@@ -55,11 +57,11 @@ class Min extends Heap
      *
      * @return mixed
      */
-    protected function compare($key1, $key2)
+    protected function compare(string $key1, string $key2): int
     {
         $a = $this->priorities[$key1];
         $b = $this->priorities[$key2];
 
-        return  ($a < $b) ? -1 : (($a > $b) ? 1 : 0);
+        return $a <=> $b;
     }
 }

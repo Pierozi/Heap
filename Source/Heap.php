@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Hoa.
  *
@@ -82,12 +84,12 @@ abstract class Heap implements \Countable, \Iterator
      * Method for compare two element and determine the
      * position inside the heap.
      *
-     * @param $key1
-     * @param $key2
+     * @param string $key1
+     * @param string $key2
      *
      * @return mixed
      */
-    abstract protected function compare($key1, $key2);
+    abstract protected function compare(string $key1, string $key2): int;
 
     /**
      * Sort heap using the compare method.
@@ -108,9 +110,9 @@ abstract class Heap implements \Countable, \Iterator
      *
      * @return string key of element
      */
-    public function insert($value, $priority = 0, $key = null)
+    public function insert($value, $priority = 0, string $key = ''): string
     {
-        if (null === $key) {
+        if ('' === $key) {
             $key = Consistency::uuid();
         }
 
@@ -135,7 +137,7 @@ abstract class Heap implements \Countable, \Iterator
      *
      * @return mixed element
      */
-    public function detach($key)
+    public function detach(string $key)
     {
         if (false === isset($this->priorities[$key])) {
             throw new KeyNotFoundException('Given key does not exist in heap');
@@ -160,7 +162,7 @@ abstract class Heap implements \Countable, \Iterator
      *
      * @return bool
      */
-    public function extract(&$key, &$element)
+    public function extract(string &$key, &$element): bool
     {
         if (false === $this->valid()) {
             return false;
@@ -181,7 +183,7 @@ abstract class Heap implements \Countable, \Iterator
      *
      * @return \Generator
      */
-    public function top()
+    public function top(): \Generator
     {
         $this->sort();
 
@@ -201,7 +203,7 @@ abstract class Heap implements \Countable, \Iterator
      *
      * @return \Generator
      */
-    public function pop()
+    public function pop(): \Generator
     {
         $this->sort();
 
@@ -219,7 +221,7 @@ abstract class Heap implements \Countable, \Iterator
     /**
      * Move forward to end of iterator.
      */
-    public function end($sort = true)
+    public function end(bool $sort = true): void
     {
         if (true === $sort) {
             $this->sort();
@@ -243,7 +245,7 @@ abstract class Heap implements \Countable, \Iterator
      *
      * @return int
      */
-    public function priority()
+    public function priority(): int
     {
         return $this->priorities[$this->key()];
     }
@@ -270,7 +272,7 @@ abstract class Heap implements \Countable, \Iterator
     public function key()
     {
         if (false === $this->valid()) {
-            return;
+            return null;
         }
 
         return $this->traversable[$this->cursor];
@@ -279,11 +281,9 @@ abstract class Heap implements \Countable, \Iterator
     /**
      * Move forward to next element.
      */
-    public function next()
+    public function next(): void
     {
         ++$this->cursor;
-
-        return;
     }
 
     /**
@@ -291,7 +291,7 @@ abstract class Heap implements \Countable, \Iterator
      * 
      * @param bool $sort
      */
-    public function rewind($sort = true)
+    public function rewind(bool $sort = true): void
     {
         reset($this->traversable);
         $this->cursor = key($this->traversable);
@@ -299,8 +299,6 @@ abstract class Heap implements \Countable, \Iterator
         if (true === $sort) {
             $this->sort();
         }
-
-        return;
     }
 
     /**
@@ -308,7 +306,7 @@ abstract class Heap implements \Countable, \Iterator
      *
      * @return bool
      */
-    public function valid()
+    public function valid(): bool
     {
         return isset($this->traversable[$this->cursor]);
     }
@@ -316,7 +314,7 @@ abstract class Heap implements \Countable, \Iterator
     /**
      * @return int
      */
-    public function count()
+    public function count(): int
     {
         return count($this->traversable);
     }
